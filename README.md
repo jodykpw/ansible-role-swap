@@ -54,7 +54,7 @@ Example Playbook
 ----------------
 
     - hosts: all
-    
+      become: true
       vars:
         swap_enabled: true
         swap_files:
@@ -65,7 +65,6 @@ Example Playbook
         swap_file_path: /swapfile
         swappiness_value: 10
         vfs_cache_pressure_value: 50
-    
       roles:
         - ansible-role-swap
 

@@ -1,6 +1,6 @@
 galaxy_info:
   author: Jody WAN
-  description: your role description
+  description: Ansible role to manage swap space
   linkedin: https://www.linkedin.com/in/jodywan/
   website: https://www.jodywan.com
   license: "license (BSD, MIT)"
