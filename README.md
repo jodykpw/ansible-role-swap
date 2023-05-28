@@ -43,7 +43,7 @@ Set the swappiness, 30 is default, the recommended swappiness value is typically
 
 Set the vfs_cache_pressure, 100 is default, the recommended value for vfs_cache_pressure is typically set to a value of 50. 
 
-    vfs_cache_pressure_value
+    vfs_cache_pressure_value: 50
     
 Dependencies
 ------------
