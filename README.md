@@ -1,4 +1,4 @@
-Role Name
+Ansible Role: Swap
 =========
 
 When swap is enabled, the operating system can use it as a temporary storage area to offload less frequently accessed memory pages from RAM, making room for more active processes. This helps prevent memory exhaustion and allows the system to handle a larger workload.
