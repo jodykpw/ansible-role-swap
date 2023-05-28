@@ -1,0 +1,10 @@
+---
+swap_enabled: true
+swap_files:
+  - /swap
+  - /swapfile
+  - /swap.img
+swap_size: '4096'
+swap_file_path: /swapfile
+swappiness_value: 10
+vfs_cache_pressure_value: 50

@@ -1,0 +1,81 @@
+---
+- name: Check if swap file exists
+  stat:
+    path: "{{ item }}"
+  loop: "{{ swap_files }}"
+  register: swap_file_check
+
+- name: Disable swap
+  ansible.builtin.command:
+    cmd: swapoff -a
+  when: item.stat.exists
+  with_items: "{{ swap_file_check.results }}"
+
+- name: Delete swap file
+  file:
+    path: "{{ item.item }}"
+    state: absent
+  when: item.stat.exists
+  with_items: "{{ swap_file_check.results }}"
+
+- name: Make a swap file
+  ansible.builtin.command:
+    cmd: "dd if=/dev/zero of={{ swap_file_path }} bs=1M count={{ swap_size }}"
+  register: makeswap_result
+- name: makeswap_result
+  ansible.builtin.debug:
+    msg: '{{ makeswap_result }}'
+
+- name: "Set proper permissions on swap file"
+  ansible.builtin.file:
+    path: '{{ swap_file_path }}'
+    owner: root
+    group: root
+    mode: 0600
+
+- name: Make swap file if necessary.
+  ansible.builtin.command:
+    cmd: mkswap {{ swap_file_path }}
+  register: mkswap_result
+
+- name: mkswap_result
+  ansible.builtin.debug:
+    msg: '{{ mkswap_result }}'
+
+- name: Enable swap
+  ansible.builtin.command:
+    cmd: swapon {{ swap_file_path }}
+- name: Enable swap
+  debug:
+    msg: "Swap Enabled"
+
+- name: Mount swap
+  ansible.posix.mount:
+    path: swap
+    src: "{{ swap_file_path }}"
+    fstype: swap
+    opts: sw
+    passno: "0"
+    dump: "0"
+    state: present
+
+- name: Disable swap
+  ansible.builtin.command:
+    cmd: swapoff -a
+  when: swap_enabled == false
+- name: Disable swap
+  debug:
+    msg: "Swap Disabled"
+  when: swap_enabled == false
+
+- ansible.posix.sysctl:
+    name: vm.swappiness
+    value: '{{ swappiness_value }}'
+    state: present
+    sysctl_file: /etc/sysctl.conf
+    
+- ansible.posix.sysctl:
+    name: vm.vfs_cache_pressure
+    value: '{{ vfs_cache_pressure_value }}'
+    state: present
+    sysctl_file: /etc/sysctl.conf
